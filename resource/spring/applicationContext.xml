@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+        
+        <context:component-scan base-package="com.huaruan.appinfo.service"></context:component-scan>
+        
+        <context:property-placeholder location="classpath:db.properties"/>
+        
+        <!-- 1.将数据源交给Spring管理 -->
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        	<property name="driverClassName" value="${mysql.driverClassName}"/>
+        	<property name="url" value="${mysql.url}"/>
+        	<property name="username" value="${mysql.username}"/>
+        	<property name="password" value="${mysql.password}"/>
+        </bean>
+        
+        <!-- 2.将SqlSessionFactory交给Spring管理 -->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        	<property name="dataSource" ref="dataSource"/>
+        	<property name="typeAliasesPackage" value="com.huaruan.appinfo.pojo"></property>
+        </bean>
+        
+        <!-- 自动创建MapperFactoryBean -->
+        <!-- 3.开启Mapper扫描器 -->
+        <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        	<property name="basePackage" value="com.huaruan.appinfo.dao"></property>
+        </bean>
+        
+</beans>
